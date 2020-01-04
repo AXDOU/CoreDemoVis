@@ -1,0 +1,49 @@
+﻿@model List<CfoDAL.DataEntity.CoreUser>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+<div class="table-responsive">
+    <table class="table table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th> @Html.DisplayNameFor(Model => Model.FirstOrDefault().FullName)</th>
+                <th> @Html.DisplayNameFor(Model => Model.FirstOrDefault().Phone)</th>
+                <th> @Html.DisplayNameFor(Model => Model.FirstOrDefault().Email)</th>
+                <th> @Html.DisplayNameFor(Model => Model.FirstOrDefault().Password)</th>
+                <th> @Html.DisplayNameFor(Model => Model.FirstOrDefault().Address)</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Phone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Password)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td>
+                        <a asp-controller="CRUD" asp-action="Create" asp-route-id="@item.ID">添加</a> |
+                        <a asp-controller="CRUD" asp-action="Edit" asp-route-id="@item.ID">编辑</a> |
+                        <a asp-controller="CRUD" asp-action="Details" asp-route-id="@item.ID">查询</a> |
+                        <a asp-controller="CRUD" asp-action="Delete" asp-route-id="@item.ID">删除</a> |
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

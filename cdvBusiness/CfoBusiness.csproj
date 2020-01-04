@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="IUserService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="User\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CfoMiddleware\CfoMiddleware.csproj" />
+    <ProjectReference Include="..\CoreDemoVisDAL\CfoDAL.csproj" />
+  </ItemGroup>
+
+</Project>
