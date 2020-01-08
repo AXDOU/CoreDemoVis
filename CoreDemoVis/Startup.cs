@@ -92,7 +92,6 @@ namespace CoreDemoVis
             app.UseCookiePolicy();
 
             app.UseMvc(routes =>
-
             {
                 routes.MapRoute(
                     name: "default",
