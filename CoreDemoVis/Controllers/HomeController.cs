@@ -22,7 +22,7 @@ namespace CoreDemoVis.Controllers
 
         private IUserService _service { get; set; }
         private ILog log;
-
+        
         public HomeController(IUserService service, IHostingEnvironment hostingEnv)
         {
             this._service = service;
@@ -68,7 +68,7 @@ namespace CoreDemoVis.Controllers
             //userManage.Remove(3);
             return View();
         }
-        
+
 
         [Authorize(Roles = "system")]
         public IActionResult About()
@@ -129,6 +129,18 @@ namespace CoreDemoVis.Controllers
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Login");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginOut(string loginName)
+        {
+            bool isauthenticated = User.Identity.IsAuthenticated;
+            if (isauthenticated)
+            {
+                await HttpContext.SignOutAsync("Cookies");
+            }
+            return RedirectToAction("Index");
         }
     }
 }

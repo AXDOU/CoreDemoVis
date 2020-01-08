@@ -16,16 +16,17 @@
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
     <style>
-        body{
-            height:900px;
-            line-height:24px;
+        body {
+            height: 900px;
+            line-height: 24px;
+        }
 
+        .container {
+            height: calc(100% - 51px);
         }
-        .container{
-            height:calc(100% - 51px);
-        }
+
         footer {
-            text-align:center;
+            text-align: center;
             position: relative;
             bottom: -100px;
         }
@@ -48,6 +49,21 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li><a asp-area="" asp-controller="CRUD" asp-action="Index">CRUD</a></li>
+
+                    @if (string.IsNullOrWhiteSpace(User.Identity.Name))
+                    {
+                        <li style="position:absolute;right:20px;">
+                            <a asp-area="" asp-controller="Home" asp-action="Login">登录</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li style="position:absolute;right:80px;"><a>@User.Identity.Name</a></li>
+                        <li style="position:absolute;right:20px;">
+                            <a asp-area="" asp-controller="Home" asp-action="LoginOut" asp-route-loginName="@User.Identity.Name">登出</a>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>
@@ -55,7 +71,7 @@
 
     <partial name="_CookieConsentPartial" />
 
-    <div class="container body-content" >
+    <div class="container body-content">
         @RenderBody()
         <hr />
     </div>
