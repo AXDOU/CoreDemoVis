@@ -92,3 +92,8 @@
         </ul>
     </div>
 </div>
+<div class="row">
+    <label>@User.Identity.Name</label>
+    <label>@User.Identities.FirstOrDefault().AuthenticationType</label>
+    <label>@User.Claims.FirstOrDefault().Value</label>
+</div>

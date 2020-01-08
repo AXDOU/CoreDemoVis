@@ -8,7 +8,11 @@ using CoreDemoVis.Models;
 using CfoDAL.DataBase;
 using CfoDAL.DataEntity;
 using CfoMiddleware;
-
+using Microsoft.AspNetCore.Hosting;
+using log4net;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
 
 namespace CoreDemoVis.Controllers
 {
@@ -17,22 +21,19 @@ namespace CoreDemoVis.Controllers
     {
 
         private IUserService _service { get; set; }
+        private ILog log;
 
-        public HomeController(IUserService service)
+        public HomeController(IUserService service, IHostingEnvironment hostingEnv)
         {
-           this._service = service;
+            this._service = service;
+            this.log = LogManager.GetLogger(AutofacConfigure.log4Repository.Name, typeof(Log4Controller));
         }
 
-        public void TestAutofac()
-        {
-            //var msg = _service.GetAutofacString();
-            var users = _service.GetUsers();
-            var str = _service.AutofacName;
-        }
-
+        [AllowAnonymous]
         public IActionResult Index()
         {
-            TestAutofac();
+            CoreUser coreUser = _service.GetUser(1);
+            string name = coreUser.FullName;
             //CoreUser coreUser = new CoreUser
             //{
             //    Password = "122",
@@ -67,8 +68,9 @@ namespace CoreDemoVis.Controllers
             //userManage.Remove(3);
             return View();
         }
+        
 
-
+        [Authorize(Roles = "system")]
         public IActionResult About()
         {
             ViewData["Message"] = "Your application description page.";
@@ -76,6 +78,7 @@ namespace CoreDemoVis.Controllers
             return View();
         }
 
+        [Authorize(Roles = "admin")]
         public IActionResult Contact()
         {
             ViewData["Message"] = "Your contact page.";
@@ -92,6 +95,40 @@ namespace CoreDemoVis.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+
+        /// <summary>
+        /// 登录权限认证
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Login(string loginName, string password, string returnUrl = null)
+        {
+            var user = _service.GetEnableUser(loginName);
+            if (user != null || !user.Password.Equals(password))
+            {
+                string role = loginName == "15236551222" ? "admin" : "system";
+                //身份证
+                var claim = new List<Claim> { new Claim(ClaimTypes.Name, loginName), new Claim(ClaimTypes.Role, role) };
+                //人
+                var claimsIdentity = new ClaimsIdentity(claim, "Cookies");
+
+                //凭证
+                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                await HttpContext.SignInAsync(claimsPrincipal);
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Login");
         }
     }
 }

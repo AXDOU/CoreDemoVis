@@ -1,0 +1,16 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@inject CfoBusiness.AutofacService options
+@{
+    ViewData["Title"] = "Index";
+    string confifstr = Configuration["ConnectionStrings:CoreDemoVisContext"];
+}
+
+<h2>Index</h2>
+
+<div>
+    <ul>
+        <li>@confifstr</li>
+        <li>@Html.DropDownList("ListGender", options.ListGenders().Select(x => new SelectListItem { Value = x, Text = x }))</li>
+    </ul>
+</div>

@@ -9,10 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="User\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\CfoMiddleware\CfoMiddleware.csproj" />
     <ProjectReference Include="..\CoreDemoVisDAL\CfoDAL.csproj" />
   </ItemGroup>

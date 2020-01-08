@@ -38,9 +38,9 @@ namespace CfoDAL.DataEntity
         ///<summary>        ///手机号        ///</summary>
         public string Phone { get; set; }
 
-        [DisplayName("key")]
-        ///<summary>        ///key        ///</summary>
-        public string CoKey { get; set; }
+        //[DisplayName("key")]
+        /////<summary>        /////key        /////</summary>
+        //public string CoKey { get; set; }
 
     }
 }

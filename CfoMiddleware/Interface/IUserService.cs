@@ -15,6 +15,8 @@ namespace CfoMiddleware
 
         CoreUser GetUser(int id);
 
+        CoreUser GetEnableUser(string loginName);
+
         bool Update(CoreUser user);
 
         Task<bool> Edit(CoreUser user);
@@ -24,6 +26,5 @@ namespace CfoMiddleware
 
         bool Insert(CoreUser user);
 
-        string AutofacName { get; }
     }
 }

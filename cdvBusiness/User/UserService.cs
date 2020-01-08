@@ -26,12 +26,10 @@ namespace CfoMiddleware
             return dbContext.Queryable<CoreUser>().First(x => x.ID == Id);
         }
 
-
-        public string GetAutofacString()
+        public CoreUser GetEnableUser(string loginName)
         {
-            return "hello world";
+            return dbContext.Queryable<CoreUser>().First(x => x.Phone == loginName);
         }
 
-        public string AutofacName { get { return "你zui了"; } }
     }
 }
