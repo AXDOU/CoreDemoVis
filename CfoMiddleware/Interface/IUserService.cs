@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using CfoDAL.DataEntity;
@@ -9,9 +10,14 @@ namespace CfoMiddleware
     public interface IUserService
     {
 
+        //根据实体类创建表
+        void AddTableByEntity<T>();
+
         //string GetAutofacString();
 
         List<CoreUser> GetUsers();
+
+        CoreUser FindByClause(Expression<Func<CoreUser,bool>> expression);
 
         CoreUser GetUser(int id);
 

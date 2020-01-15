@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using CfoDAL.DataEntity;
@@ -37,6 +38,22 @@ namespace CfoDAL.DataBase
         {
             return Currentdb.GetList();
         }
+
+        /// <summary>
+        /// 根据实体生成数据表
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        public virtual void AddTableByEntity<T>()
+        {
+            context.CodeFirst.SetStringDefaultLength(200/*设置varchar默认长度为200*/).InitTables(typeof(T));//执行完数据库就有这个表了
+        }
+
+        public virtual T FindByClause(Expression<Func<T, bool>> predicate)
+        {
+            return context.Queryable<T>().Where(predicate).First(); 
+        }
+
+
 
         public virtual bool Delete(int id)
         {

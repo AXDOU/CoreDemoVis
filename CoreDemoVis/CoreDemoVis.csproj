@@ -39,6 +39,12 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Area\Data\" />
+    <Folder Include="Areas\Area\Models\" />
+    <Folder Include="Areas\Area\Views\" />
+  </ItemGroup>
+
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 
 </Project>

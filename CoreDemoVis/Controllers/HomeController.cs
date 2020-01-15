@@ -13,6 +13,7 @@ using log4net;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
+using CfoMiddleware.Extension;
 
 namespace CoreDemoVis.Controllers
 {
@@ -22,7 +23,7 @@ namespace CoreDemoVis.Controllers
 
         private IUserService _service { get; set; }
         private ILog log;
-        
+
         public HomeController(IUserService service, IHostingEnvironment hostingEnv)
         {
             this._service = service;
@@ -32,6 +33,10 @@ namespace CoreDemoVis.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
+           
+            //string desc = user.GetCustomDesc("Id");
+            //string desc2 = user.GetCustomDesc("LoginName");
+
             CoreUser coreUser = _service.GetUser(1);
             string name = coreUser.FullName;
             //CoreUser coreUser = new CoreUser
@@ -141,6 +146,21 @@ namespace CoreDemoVis.Controllers
                 await HttpContext.SignOutAsync("Cookies");
             }
             return RedirectToAction("Index");
+        }
+
+
+        /// <summary>
+        /// 测试根据实体生成sql语句
+        /// </summary>
+        private void TestGenerateTableMethod()
+        {
+            Models.tb_user user = new tb_user();
+            ///测试生成表结构信息
+            string result = user.DefaultStrSize(100).ToSqlTableStruct();
+
+
+            Post post = new Post();
+            string res2 = post.ToSqlTableStruct();
         }
     }
 }
