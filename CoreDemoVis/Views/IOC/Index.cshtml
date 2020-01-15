@@ -13,4 +13,18 @@
         <li>@confifstr</li>
         <li>@Html.DropDownList("ListGender", options.ListGenders().Select(x => new SelectListItem { Value = x, Text = x }))</li>
     </ul>
+
+    <h5>古城</h5>
+    <ul>
+        <li>@ViewBag.LongDu</li>
+        <li>@ViewBag.NanYang</li>
+    </ul>
+
+    <h5>朝代</h5>
+    <ul>
+        <li>@ViewBag.Qin</li>
+        <li>@ViewBag.Tang</li>
+        <li>@ViewBag.Tang2</li>
+        <li>@ViewBag.Ming</li>
+    </ul>
 </div>

@@ -22,6 +22,9 @@ using System.IO;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
+using CfoMiddleware.Interface;
+using CfoBusiness.City;
+using CfoBusiness.Dynasty;
 
 namespace CoreDemoVis
 {
@@ -53,7 +56,7 @@ namespace CoreDemoVis
             //加入全局异常类
             services.AddMvc(options =>
             {
-                options.Filters.Add<Models.HttpGlobalExceptionFilter>(); //加入全局异常类
+                options.Filters.Add<Models.HttpGlobalExceptionFilter>(); 
             });
 
             //认证Cookie
@@ -73,7 +76,6 @@ namespace CoreDemoVis
         {
             if (env.IsDevelopment())
             {
-                //app.UseStatusCodePages(); 
                 app.UseDeveloperExceptionPage();
             }
             else
@@ -85,7 +87,7 @@ namespace CoreDemoVis
             app.ApplicationServices.GetService(typeof(ILoggerFactory));
 
 
-            app.UseAuthentication();//开启权限认证
+            app.UseAuthentication();//开启认证
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -105,6 +107,8 @@ namespace CoreDemoVis
     /// </summary>
     public class AutofacConfigure
     {
+        public static ILoggerRepository log4Repository { get; set; }
+
         public static AutofacServiceProvider Register(IServiceCollection services)
         {
             ContainerBuilder builder = new Autofac.ContainerBuilder();
@@ -130,10 +134,30 @@ namespace CoreDemoVis
         private static void RegisterViewOfService(IServiceCollection services)
         {
             services.AddTransient<CfoBusiness.AutofacService>();
+            //一个接口，多个实现 方式1
+            services.AddScoped<ICity, NanYangService>();
+            services.AddSingleton<ICity, LongDuService>();
+
+            //一个接口多个实现 方式2
+            services.AddTransient<Qin>();
+            services.AddSingleton<Tang>();
+            services.AddScoped<Ming>();
+            services.AddTransient(factory =>
+            {
+                Func<string, IDynasty> func = key =>
+                {
+                    if (key.Equals("Qin") || key.Equals("秦"))
+                        return factory.GetService<Qin>();
+                    else if (key.Equals("Tang"))
+                        return factory.GetService<Tang>();
+                    else if (key.Equals("Ming"))
+                        return factory.GetService<Ming>();
+                    else
+                        throw new ArgumentException($"Not Support key : {key}");
+                };
+                return func;
+            });
         }
-
-
-        public static ILoggerRepository log4Repository { get; set; }
 
         /// <summary>
         /// log4日志配置项
