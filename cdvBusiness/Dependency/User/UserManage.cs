@@ -17,7 +17,7 @@ namespace CfoMiddleware
         private SqlSugarClient dbContext;
         public UserManage()
         {
-            dbContext = new SqlSugarFactory().Context;
+            dbContext = new SqlSugarFactory().InitSqlSugarClient;
         }
 
         //public bool Edit(CoreUser userModel)

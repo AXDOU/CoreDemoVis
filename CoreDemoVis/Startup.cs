@@ -33,7 +33,10 @@ namespace CoreDemoVis
 
         public Startup(IConfiguration configuration)
         {
+          
+      
             Configuration = configuration;
+         
         }
 
 
@@ -47,7 +50,7 @@ namespace CoreDemoVis
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
-
+               
             });
             //加入全局异常类
             services.AddMvc(options =>
@@ -62,6 +65,9 @@ namespace CoreDemoVis
                 options.AccessDeniedPath = new PathString("/Home");
                 options.Cookie.Name = "applicationCookie";
             });
+
+           
+            services.AddSingleton<IConfiguration>(Configuration);//配置IConfiguration的依赖
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             return AutofacConfigure.Register(services);
@@ -81,7 +87,7 @@ namespace CoreDemoVis
             }
 
             app.ApplicationServices.GetService(typeof(ILoggerFactory));
-
+           
 
             app.UseAuthentication();//开启认证
 
@@ -105,9 +111,11 @@ namespace CoreDemoVis
     {
         public static ILoggerRepository log4Repository { get; set; }
 
+        public static string ConnectionString { get { return Test(); } }
+
         public static AutofacServiceProvider Register(IServiceCollection services)
         {
-            ContainerBuilder builder = new Autofac.ContainerBuilder();
+            ContainerBuilder builder = new ContainerBuilder();
 
             //注入视图
             RegisterViewOfService(services);
@@ -119,6 +127,9 @@ namespace CoreDemoVis
             builder.Populate(services);
 
             builder.RegisterAssemblyTypes(typeof(Program).Assembly).AsImplementedInterfaces();
+
+         
+           
             var container = builder.Build();
             return new AutofacServiceProvider(container);
         }
@@ -163,6 +174,14 @@ namespace CoreDemoVis
             //log4net
             log4Repository = LogManager.CreateRepository("NETCoreRepository");
             XmlConfigurator.Configure(log4Repository, new FileInfo("log4net.config"));
+        }
+
+
+
+        private static string Test()
+        {
+            var configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.json").Build();
+            return configuration.GetConnectionString("CoreDemoVisContext");
         }
     }
 }

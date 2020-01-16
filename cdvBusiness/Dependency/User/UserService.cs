@@ -13,7 +13,7 @@ namespace CfoMiddleware
         private SqlSugarClient dbContext;
         public UserService()
         {
-            dbContext = new SqlSugarFactory().Context;
+            dbContext = new SqlSugarFactory().InitSqlSugarClient;
         }
 
         public List<CoreUser> GetUsers()

@@ -11,16 +11,12 @@ namespace CfoDAL.DataBase
 {
     public class DbContext<T> where T : class, new()
     {
+        private ISqlSugarFactory factory = new SqlSugarFactory();
+
         public DbContext()
         {
             if (context == null)
-                context = new SqlSugarClient(new ConnectionConfig
-                {
-                    DbType = DbType.SqlServer,
-                    ConnectionString = "server=.;uid=sa;pwd=sa123;database=CoreDemo",
-                    InitKeyType = InitKeyType.Attribute,//从实体中读取自增列信息
-                    IsAutoCloseConnection = true
-                });
+                context = factory.InitSqlSugarClient;
 
             context.Aop.OnLogExecuting = (sql, pars) =>
             {
@@ -50,7 +46,7 @@ namespace CfoDAL.DataBase
 
         public virtual T FindByClause(Expression<Func<T, bool>> predicate)
         {
-            return context.Queryable<T>().Where(predicate).First(); 
+            return context.Queryable<T>().Where(predicate).First();
         }
 
 

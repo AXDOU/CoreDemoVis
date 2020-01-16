@@ -33,10 +33,10 @@ namespace CoreDemoVis.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-           
+            string connectionStr = ConfigExtension.GetSection("ConnectionStrings");
             //string desc = user.GetCustomDesc("Id");
             //string desc2 = user.GetCustomDesc("LoginName");
-
+            TestGenerateTableMethod();
             CoreUser coreUser = _service.GetUser(1);
             string name = coreUser.FullName;
             //CoreUser coreUser = new CoreUser

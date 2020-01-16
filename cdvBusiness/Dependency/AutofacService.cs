@@ -20,7 +20,7 @@ namespace CfoBusiness
         private SqlSugarClient dbContext;
         public AutofacService()
         {
-            dbContext = new SqlSugarFactory().Context;
+            dbContext = new SqlSugarFactory().InitSqlSugarClient;
         }
        
         public string AutofacAttribute { get { return "属性啊"; } }

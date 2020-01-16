@@ -21,6 +21,14 @@ namespace CoreDemoVis
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
            .UseStartup<Startup>()
+           .ConfigureAppConfiguration((hostingContext, config) =>
+                    {
+                        var builtConfig = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+                                        .AddJsonFile("appsettings.json")
+                                        .AddCommandLine(args)
+                                        .Build();
+                        config.AddConfiguration(builtConfig);
+                    })
             .ConfigureLogging(logging =>
             {
                 logging.ClearProviders();
