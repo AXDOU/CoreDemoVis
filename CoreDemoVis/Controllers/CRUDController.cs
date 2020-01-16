@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CfoDAL.DataEntity;
-using CfoMiddleware;
+using CfoBusiness;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
+using CfoMiddleware;
+
 namespace CoreDemoVis.Controllers
 {
     public class CRUDController : Controller

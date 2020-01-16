@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cfo.DTO.Base;
 using CfoDAL.DataBase;
 using CfoDAL.DataEntity;
 using CfoMiddleware;
 using SqlSugar;
 
-namespace CfoMiddleware
+namespace CfoBusiness
 {
-
+    [AutofacAutoRegisterAttribute]
     public class UserService : DbContext<CoreUser>, IUserService
     {
         private SqlSugarClient dbContext;

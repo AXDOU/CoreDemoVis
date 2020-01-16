@@ -1,16 +1,18 @@
-﻿using CfoDAL.DataBase;
+﻿using Cfo.DTO.Base;
+using CfoDAL.DataBase;
 using CfoDAL.DataEntity;
-using CfoMiddleware;
-using CfoMiddleware.Interface;
+using CfoBusiness;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using CfoMiddleware.Interface;
 
 namespace CfoBusiness
 {
+    [AutofacAutoRegisterAttribute]
     /// <summary>
     /// Autofac
     /// </summary>

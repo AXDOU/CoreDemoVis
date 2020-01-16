@@ -7,13 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using CoreDemoVis.Models;
 using CfoDAL.DataBase;
 using CfoDAL.DataEntity;
-using CfoMiddleware;
+using CfoBusiness;
 using Microsoft.AspNetCore.Hosting;
 using log4net;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
-using CfoMiddleware.Extension;
+using CfoMiddleware;
 
 namespace CoreDemoVis.Controllers
 {
@@ -33,44 +33,7 @@ namespace CoreDemoVis.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            string connectionStr = ConfigExtension.GetSection("ConnectionStrings");
-            //string desc = user.GetCustomDesc("Id");
-            //string desc2 = user.GetCustomDesc("LoginName");
-            TestGenerateTableMethod();
-            CoreUser coreUser = _service.GetUser(1);
-            string name = coreUser.FullName;
-            //CoreUser coreUser = new CoreUser
-            //{
-            //    Password = "122",
-            //    Address = "地址",
-            //    CoKey = "11",
-            //    Email = "11",
-            //    FullName = "tang1",
-            //    Phone = "12346546551",
-            //    Sex = 0
-            //};
-            //userManage.Insert(coreUser);
-
-            //user2.CoKey = "11111";
-            //user2.Email = "22@qq.com";
-            //userManage.Update(user2);
-            //userManage.Delete(2);
-
-            //CoreUser coreUser2 = new CoreUser
-            //{
-            //    Password = "122",
-            //    Address = "地址",
-            //    CoKey = "11",
-            //    Email = "11",
-            //    FullName = "tang2",
-            //    Phone = "12346546551",
-            //    Sex = 0
-            //};
-            //userManage.Add(coreUser2);
-            //var user3 = userService.GetUser(3);
-            //user3.FullName = "tang22";
-            //userManage.Edit(user3);
-            //userManage.Remove(3);
+            
             return View();
         }
 
@@ -146,21 +109,6 @@ namespace CoreDemoVis.Controllers
                 await HttpContext.SignOutAsync("Cookies");
             }
             return RedirectToAction("Index");
-        }
-
-
-        /// <summary>
-        /// 测试根据实体生成sql语句
-        /// </summary>
-        private void TestGenerateTableMethod()
-        {
-            Models.tb_user user = new tb_user();
-            ///测试生成表结构信息
-            string result = user.DefaultStrSize(100).ToSqlTableStruct();
-
-
-            Post post = new Post();
-            string res2 = post.ToSqlTableStruct();
         }
     }
 }

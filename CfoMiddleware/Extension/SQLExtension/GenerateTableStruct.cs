@@ -10,6 +10,8 @@ using Cfo.DTO.Base.Extension.SqlTableStruct;
 using System.ComponentModel.DataAnnotations;
 using SqlSugar;
 using System.Linq.Expressions;
+using Cfo.DTO.Base;
+using CfoMiddleware.Extension;
 
 namespace CfoMiddleware.Extension
 {
@@ -23,7 +25,8 @@ namespace CfoMiddleware.Extension
         public static string GetCustomDesc<T>(this T data, string column)
         {
             Type type = typeof(T);
-            return type.GetProperties().FirstOrDefault(x => x.Name.Equals(column)).GetCustomAttribute<CustomDescAttribute>()?.Descroption;
+            string res = type.GetProperties().FirstOrDefault(x => x.Name.Equals(column)).GetCustomAttribute<CustomDescAttribute>()?.Descroption;
+            return res;
         }
 
         /// <summary>

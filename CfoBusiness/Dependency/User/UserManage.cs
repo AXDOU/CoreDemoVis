@@ -7,10 +7,10 @@ using System.Reflection;
 using System.Text;
 using CfoDAL.DataBase;
 using CfoDAL.DataEntity;
-using CfoMiddleware;
+using CfoBusiness;
 using SqlSugar;
 
-namespace CfoMiddleware
+namespace CfoBusiness
 {
     public class UserManage : DbContext<CoreUser>
     {

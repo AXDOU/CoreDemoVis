@@ -39,7 +39,7 @@ namespace CfoDAL.DataBase
         /// 根据实体生成数据表
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        public virtual void AddTableByEntity<T>()
+        public virtual void AddTableByEntity()
         {
             context.CodeFirst.SetStringDefaultLength(200/*设置varchar默认长度为200*/).InitTables(typeof(T));//执行完数据库就有这个表了
         }

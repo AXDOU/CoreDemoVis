@@ -22,9 +22,11 @@ using System.IO;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
-using CfoMiddleware.Interface;
 using CfoBusiness.City;
 using CfoBusiness.Dynasty;
+using CfoBusiness;
+using CfoMiddleware.Interface;
+using CfoMiddleware;
 
 namespace CoreDemoVis
 {
@@ -33,12 +35,8 @@ namespace CoreDemoVis
 
         public Startup(IConfiguration configuration)
         {
-          
-      
             Configuration = configuration;
-         
         }
-
 
         public IConfiguration Configuration { get; }
 
@@ -67,9 +65,10 @@ namespace CoreDemoVis
             });
 
            
-            services.AddSingleton<IConfiguration>(Configuration);//配置IConfiguration的依赖
+            services.AddSingleton(Configuration);//配置IConfiguration的依赖
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+           
             return AutofacConfigure.Register(services);
         }
 
@@ -88,9 +87,7 @@ namespace CoreDemoVis
 
             app.ApplicationServices.GetService(typeof(ILoggerFactory));
            
-
             app.UseAuthentication();//开启认证
-
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
@@ -111,25 +108,29 @@ namespace CoreDemoVis
     {
         public static ILoggerRepository log4Repository { get; set; }
 
-        public static string ConnectionString { get { return Test(); } }
 
         public static AutofacServiceProvider Register(IServiceCollection services)
         {
             ContainerBuilder builder = new ContainerBuilder();
-
+            //注入log4
+            Log4Register();
             //注入视图
             RegisterViewOfService(services);
 
-            //注入log4
-            Log4Register();
 
-            builder.RegisterAssemblyTypes(Assembly.Load("CfoBusiness")).AsImplementedInterfaces().InstancePerLifetimeScope();
+
+            //builder.RegisterType<UserService>().As<IUserService>();
+            //.Where(t => t.Name.EndsWith("Service"))
+            //.AsImplementedInterfaces();
+            //builder.RegisterType<UserService>().AsImplementedInterfaces().InstancePerLifetimeScope();
+            //builder.RegisterAssemblyTypes(Assembly.Load("CfoMiddleware")).AsImplementedInterfaces().InstancePerLifetimeScope();
+            //builder.RegisterAssemblyTypes(typeof(Program).Assembly).AsImplementedInterfaces();
+
+            var types = Assembly.Load("CfoBusiness").GetTypes().Where(x => x.Name.Contains("Service")).ToArray();
+            builder.RegisterTypes(types).AsImplementedInterfaces().InstancePerLifetimeScope().PropertiesAutowired();
+            //builder.RegisterAssemblyTypes(Assembly.Load("CfoBusiness")).AsImplementedInterfaces().SingleInstance();
             builder.Populate(services);
 
-            builder.RegisterAssemblyTypes(typeof(Program).Assembly).AsImplementedInterfaces();
-
-         
-           
             var container = builder.Build();
             return new AutofacServiceProvider(container);
         }
@@ -175,13 +176,6 @@ namespace CoreDemoVis
             log4Repository = LogManager.CreateRepository("NETCoreRepository");
             XmlConfigurator.Configure(log4Repository, new FileInfo("log4net.config"));
         }
-
-
-
-        private static string Test()
-        {
-            var configuration = new ConfigurationBuilder().AddJsonFile($"appsettings.json").Build();
-            return configuration.GetConnectionString("CoreDemoVisContext");
-        }
+      
     }
 }

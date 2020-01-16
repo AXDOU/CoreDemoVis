@@ -9,8 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CfoDAL\CfoDAL.csproj" />
     <ProjectReference Include="..\CfoMiddleware\CfoMiddleware.csproj" />
-    <ProjectReference Include="..\CoreDemoVisDAL\CfoDAL.csproj" />
   </ItemGroup>
 
 </Project>

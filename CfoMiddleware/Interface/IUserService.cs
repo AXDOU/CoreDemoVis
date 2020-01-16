@@ -10,8 +10,7 @@ namespace CfoMiddleware
     public interface IUserService
     {
 
-        //根据实体类创建表
-        void AddTableByEntity<T>();
+     
 
         //string GetAutofacString();
 

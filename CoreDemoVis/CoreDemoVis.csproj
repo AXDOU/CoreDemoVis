@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <Compile Remove="Controllers\SwaggerController.cs" />
+    <Compile Remove="Models\Post.cs" />
+    <Compile Remove="Models\User.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,8 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\cdvBusiness\CfoBusiness.csproj" />
-    <ProjectReference Include="..\CoreDemoVisDAL\CfoDAL.csproj" />
+    <ProjectReference Include="..\CfoBusiness\CfoBusiness.csproj" />
+    <ProjectReference Include="..\CfoDAL\CfoDAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -40,9 +42,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Area\Data\" />
-    <Folder Include="Areas\Area\Models\" />
-    <Folder Include="Areas\Area\Views\" />
+    <Folder Include="Areas\Test\Data\" />
+    <Folder Include="Areas\Test\Models\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>

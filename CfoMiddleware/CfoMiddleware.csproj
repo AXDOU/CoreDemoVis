@@ -5,13 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="CustomDescAttribute.cs" />
+    <Compile Remove="Extension\AutofacContainer.cs" />
+    <Compile Remove="Extension\AutofacHostBuilderExtensions.cs" />
+    <Compile Remove="Extension\GenericHostAutofacServiceProviderFactory.cs" />
     <Compile Remove="Interface\ISqlSugarFactory.cs" />
     <Compile Remove="SqlSuageDbFactory.cs" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Cfo.DTO\Cfo.DTO.csproj" />
-    <ProjectReference Include="..\CoreDemoVisDAL\CfoDAL.csproj" />
+    <ProjectReference Include="..\CfoDAL\CfoDAL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +24,21 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.EntityFrameworkCore">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.entityframeworkcore\2.1.1\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.DependencyInjection.Abstractions">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.dependencyinjection.abstractions\2.1.1\lib\netstandard2.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Hosting.Abstractions">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.hosting.abstractions\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Hosting.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Extensions.Logging.Abstractions">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.extensions.logging.abstractions\2.1.1\lib\netstandard2.0\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
