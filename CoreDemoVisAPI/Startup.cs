@@ -58,19 +58,32 @@ namespace CoreDemoVisAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.ApplicationServices.GetService(typeof(ILoggerFactory));
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API");
+                    c.RoutePrefix = string.Empty;
+                });
             }
             else
             {
                 app.UseHsts();
             }
-            app.ApplicationServices.GetService(typeof(ILoggerFactory));
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
+            //更新响应头
+            app.Use(async (context, next) =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API");
-                c.RoutePrefix = string.Empty;
+                context.Response.OnStarting(() =>
+                {
+                    context.Response.Headers["server"] = "Kestrel Server 2098";
+                    context.Response.Headers.Add("x-powered-by", "Asp.NET Core 33");
+                    return Task.CompletedTask;
+                });
+                await next();
             });
 
+
+            app.UseStaticFiles();//启用静态文件
             app.UseHttpsRedirection();
             app.UseMvc();
         }

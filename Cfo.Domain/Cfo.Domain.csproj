@@ -11,4 +11,8 @@
     <Compile Remove="Program.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="IronPdf" Version="2020.1.0" />
+  </ItemGroup>
+
 </Project>

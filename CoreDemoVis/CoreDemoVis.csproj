@@ -31,6 +31,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Cfo.Domain\Cfo.Domain.csproj" />
     <ProjectReference Include="..\CfoBusiness\CfoBusiness.csproj" />
     <ProjectReference Include="..\CfoDAL\CfoDAL.csproj" />
   </ItemGroup>

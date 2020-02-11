@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using CfoMiddleware;
+using Cfo.Domain.HtmlToImg;
+using System.IO;
 
 namespace CoreDemoVis.Controllers
 {
@@ -23,6 +25,7 @@ namespace CoreDemoVis.Controllers
 
         private IUserService _service { get; set; }
         private ILog log;
+        
 
         public HomeController(IUserService service, IHostingEnvironment hostingEnv)
         {
@@ -33,10 +36,72 @@ namespace CoreDemoVis.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            
+            //IornToPdf ipornToPdf = new IornToPdf();
+            //ipornToPdf.ToPdf();
+
+            string weburl = "http://www.atjubo.com/jbpay/Pay/HeTongYP?OrderID=20201915760255743183", filepathname = "G:\\baidu.png";
+            //GeneratePdf();
+            GenerateImage(weburl, filepathname);
             return View();
         }
 
+        private void GeneratePdf()
+        {
+            System.Diagnostics.ProcessStartInfo Info = new System.Diagnostics.ProcessStartInfo();
+            Info.FileName = @"H:\projects\CoreDemoVis\Cfo.Domain\libary\wkhtmltopdf.exe";
+            Info.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            Info.CreateNoWindow = true;
+            string url = "localhost:44339/Home/Index";
+            Info.Arguments = $@"-q --orientation Landscape {url} G:\\baidu.pdf";
+            Process proc = Process.Start(Info);
+            proc.WaitForExit();
+            proc.Close();
+        } 
+
+
+        private void GenerateImage(string weburl,string filepathname)
+        {
+            try
+            {
+
+               
+                string filePath = @"G:\Test\"; //$@"{AppDomain.CurrentDomain.BaseDirectory}\contractfile\Pay\{DateTime.Now.ToString("yyyy年MM月dd日")}\";
+                if (!System.IO.Directory.Exists(filePath))
+                    System.IO.Directory.CreateDirectory(filePath);
+                string OrderNo = "20201915760255743183";
+                weburl = "http://www.atjubo.com";//jbpay
+                filepathname = filePath + OrderNo + ".png";// 
+                if (string.IsNullOrEmpty(weburl) || string.IsNullOrEmpty(filepathname))
+                    return;
+                //H:\projects\CoreDemoVis\Cfo.Domain
+                string str = @"H:\projects\CoreDemoVis\Cfo.Domain\libary\wkhtmltoimage.exe";// AppDomain.CurrentDomain.BaseDirectory + "bin\\wkhtmltopdf.exe";
+                if (!System.IO.File.Exists(str))
+                    return;
+                using (Process p = System.Diagnostics.Process.Start(str, weburl + " " + filepathname))
+                {
+                    p.WaitForExit();
+                    p.Close();
+                }
+
+                Stream stream = FileToStream(filepathname);
+            }
+            catch (Exception ex)
+            {
+               return ;
+            }
+        }
+
+        public Stream FileToStream(string fileName)
+        {
+            // 打开文件
+            FileStream fileStream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            byte[] bytes = new byte[fileStream.Length]; // 读取文件的 byte[]
+            fileStream.Read(bytes, 0, bytes.Length);
+            fileStream.Close();
+            // 把 byte[] 转换成 Stream
+            Stream stream = new MemoryStream(bytes);
+            return stream;
+        }
 
         [Authorize(Roles = "system")]
         public IActionResult About()
