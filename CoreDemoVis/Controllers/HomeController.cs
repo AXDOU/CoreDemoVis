@@ -16,6 +16,13 @@ using Microsoft.AspNetCore.Authentication;
 using CfoMiddleware;
 using Cfo.Domain.HtmlToImg;
 using System.IO;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Drawing;
+using System.Drawing.Printing;
+using static System.Net.Mime.MediaTypeNames;
+using static Cfo.Domain.HtmlToImg.IornToPdf;
 
 namespace CoreDemoVis.Controllers
 {
@@ -25,7 +32,7 @@ namespace CoreDemoVis.Controllers
 
         private IUserService _service { get; set; }
         private ILog log;
-        
+
 
         public HomeController(IUserService service, IHostingEnvironment hostingEnv)
         {
@@ -38,58 +45,141 @@ namespace CoreDemoVis.Controllers
         {
             //IornToPdf ipornToPdf = new IornToPdf();
             //ipornToPdf.ToPdf();
+            string filePath = @"G:\Test\";
+            if (!System.IO.Directory.Exists(filePath))
+                System.IO.Directory.CreateDirectory(filePath);
+            string weburl = "https://www.atjubo.com/jbpay/Pay/HeTongAdvancePayment?OrderID=20201915768359886463&Type=1";
+            string OrderNo = "20201915760255743183";
+            string filepathname = filePath + OrderNo + ".png";// 
 
-            string weburl = "http://www.atjubo.com/jbpay/Pay/HeTongYP?OrderID=20201915760255743183", filepathname = "G:\\baidu.png";
             //GeneratePdf();
             GenerateImage(weburl, filepathname);
             return View();
         }
-
+     
         private void GeneratePdf()
         {
-            System.Diagnostics.ProcessStartInfo Info = new System.Diagnostics.ProcessStartInfo();
-            Info.FileName = @"H:\projects\CoreDemoVis\Cfo.Domain\libary\wkhtmltopdf.exe";
-            Info.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            Info.CreateNoWindow = true;
-            string url = "localhost:44339/Home/Index";
-            Info.Arguments = $@"-q --orientation Landscape {url} G:\\baidu.pdf";
-            Process proc = Process.Start(Info);
-            proc.WaitForExit();
-            proc.Close();
-        } 
+            //System.Diagnostics.ProcessStartInfo Info = new System.Diagnostics.ProcessStartInfo();
+            //Info.FileName = @"H:\projects\CoreDemoVis\Cfo.Domain\libary\wkhtmltopdf.exe";
+            //Info.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            //Info.CreateNoWindow = true;
+            //string url = "localhost:44339/Home/Index";
+            //Info.Arguments = $@"wkhtmltopdf --grayscale  www.baidu.com G:\\baidu.pdf";
+            ////Info.Arguments = $@"-q --orientation Landscape {url} G:\\baidu.pdf";
+            //Process proc = Process.Start(Info);
+            //proc.WaitForExit();
+            //proc.Close();
+
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.FileName = @"H:\projects\CoreDemoVis\Cfo.Domain\libary\wkhtmltopdf.exe";
+            startInfo.Arguments = "wkhtmltopdf --grayscale --disable-smart-shrinking --header-html head.html https://www.baidu.com G:\\baidu.pdf";
+            startInfo.CreateNoWindow = true;
+            startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            var cc = Process.Start(startInfo);
+            cc.WaitForExit();
+            cc.Close();
+        }
 
 
-        private void GenerateImage(string weburl,string filepathname)
+    
+        //public static string GetHtml(string url, string charSet = "UTF-8")
+        //{
+        //    string strWebData = "";
+        //    try
+        //    {
+        //        WebClient myWebClient = new WebClient();
+        //        myWebClient.Credentials = CredentialCache.DefaultCredentials;
+        //        byte[] myDataBuffer = myWebClient.DownloadData(url);
+        //        strWebData = Encoding.Default.GetString(myDataBuffer);
+        //        Match charSetMatch = Regex.Match(strWebData, "<meta([^<]*)charset=([^<]*)\"", RegexOptions.IgnoreCase | RegexOptions.Multiline);
+        //        string webCharSet = charSetMatch.Groups[2].Value;
+        //        if (charSet == null || charSet == "")
+        //            charSet = webCharSet;
+        //        if (charSet != null && charSet != "" && Encoding.GetEncoding(charSet) != Encoding.Default)
+        //            strWebData = Encoding.GetEncoding(charSet).GetString(myDataBuffer);
+        //    }
+        //    catch { }
+        //    return strWebData;
+        //}
+
+
+        private void GenerateImage(string weburl, string filepathname)
         {
+            if (string.IsNullOrEmpty(weburl) || string.IsNullOrEmpty(filepathname))
+                return;
+            string str = @"H:\projects\CoreDemoVis\Cfo.Domain\libary\wkhtmltoimage.exe";//AppDomain.CurrentDomain.BaseDirectory + "bin\\wkhtmltopdf.exe";
+            if (!System.IO.File.Exists(str))
+                return;
             try
             {
-
-               
-                string filePath = @"G:\Test\"; //$@"{AppDomain.CurrentDomain.BaseDirectory}\contractfile\Pay\{DateTime.Now.ToString("yyyy年MM月dd日")}\";
-                if (!System.IO.Directory.Exists(filePath))
-                    System.IO.Directory.CreateDirectory(filePath);
-                string OrderNo = "20201915760255743183";
-                weburl = "http://www.atjubo.com";//jbpay
-                filepathname = filePath + OrderNo + ".png";// 
-                if (string.IsNullOrEmpty(weburl) || string.IsNullOrEmpty(filepathname))
-                    return;
-                //H:\projects\CoreDemoVis\Cfo.Domain
-                string str = @"H:\projects\CoreDemoVis\Cfo.Domain\libary\wkhtmltoimage.exe";// AppDomain.CurrentDomain.BaseDirectory + "bin\\wkhtmltopdf.exe";
-                if (!System.IO.File.Exists(str))
-                    return;
-                using (Process p = System.Diagnostics.Process.Start(str, weburl + " " + filepathname))
+                //$@"{AppDomain.CurrentDomain.BaseDirectory}\contractfile\Pay\{DateTime.Now.ToString("yyyy年MM月dd日")}\";
+                //--image-dpi <integer>	当页面嵌入图像时，将它们缩小到指定的dpi尺寸(默认值600)
+                //--image-quality <integer>  当使用jpeg算法压缩图像时，使用指定的图片质量(默认值94)
+                ImageFormat imageFormat = ImageFormat.Jpg;
+                ProcessStartInfo processInfo = new ProcessStartInfo
                 {
-                    p.WaitForExit();
-                    p.Close();
-                }
-
+                    FileName = @"H:\projects\CoreDemoVis\Cfo.Domain\libary\wkhtmltoimage.exe",
+                    CreateNoWindow = true,
+                    WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden,
+                    Arguments = $"--quality {100} --width {500} -f {imageFormat} {weburl} {filepathname}"
+                };
+          
+      
+                Process p = Process.Start(processInfo);
+                //new ProcessStartInfo(str, $"--quality {100} --width {500} -f {imageFormat} {weburl} {filepathname}")
+                p.WaitForExit();
+                p.Close();
                 Stream stream = FileToStream(filepathname);
+                if (System.IO.File.Exists(filepathname))
+                {
+                    System.IO.File.Delete(filepathname);
+                }
             }
             catch (Exception ex)
             {
-               return ;
+                return;
             }
         }
+
+
+        //private void CompressedImage(string fileName, long quality)
+        //{
+        //    FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+        //    Byte[] bytePic = new Byte[fs.Length];
+        //    fs.Read(bytePic, 0, bytePic.Length);
+        //    MemoryStream stream = new MemoryStream(bytePic);
+        //    Bitmap bmp = (Bitmap)Image.FromStream(stream);
+        //    ImageCodecInfo myImageCodecInfo = ImageCodecInfo.GetImageEncoders()[1];  //如果下面遍历没有这种图片格式，就默认为jpeg
+        //    ImageCodecInfo[] encoders = myImageCodecInfo.GetImageEncoders();
+        //    for (int j = 0; j < encoders.Length; j++)
+        //    {
+        //        if (encoders[j].MimeType == "image/jpeg")
+        //        {
+        //            myImageCodecInfo = encoders[j];
+        //            break;
+        //        }
+        //    }
+        //    System.Drawing.SizeConverter myEncoder = System.Drawing.Imaging.Encoder.Quality;  //要操作的是质量
+        //    EncoderParameters myEncoderParameters = new EncoderParameters(1);      //一个成员，只处理质量
+        //    EncoderParameter myEncoderParameter = new EncoderParameter(myEncoder, quality);    //0为最差质量,100为最好，注意是long类型
+        //    myEncoderParameters.Param[0] = myEncoderParameter;
+        //    Size s = new Size(bmp.Width, bmp.Height);
+        //    Bitmap newBmp = new Bitmap(bmp, s);
+        //    MemoryStream ms = new MemoryStream();
+        //    newBmp.Save(ms, myImageCodecInfo, myEncoderParameters);    //压缩后的流保存到ms
+        //    //从流中还原图片
+        //    Image image = Image.FromStream(ms);
+        //    string curDirectory = Path.GetDirectoryName(Assembly.GetCallingAssembly().GetModules()[0].FullyQualifiedName) + "\\";
+        //    //保存图片
+        //    image.Save(curDirectory + "pic.jpg");
+        //    fs.Dispose();
+        //    stream.Dispose();
+        //    newBmp.Dispose();
+        //    ms.Dispose();
+
+        //}
+
+
 
         public Stream FileToStream(string fileName)
         {
